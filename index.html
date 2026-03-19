@@ -664,11 +664,7 @@ function productCard(p,d){
   return`<div class="pc" onclick="openPD(${p.id})" style="animation-delay:${d}ms">
   <div class="pc-img">
     <div class="pc-glow"></div>
-    <div class="pc-badges">
-      ${p.badge==='New'?'<span class="bdg b-new">New</span>':''}
-      ${p.badge==='Sale'?'<span class="bdg b-sale">Sale</span>':''}
-      ${disc?`<span class="bdg b-disc">−${disc}%</span>`:''}
-    </div>
+    <div class="pc-badges"></div>
     <div class="pc-store" style="display:none">${STORE_ICONS[p.store]||'🔗'} ${p.store}</div>
     <div class="pc-emoji">${p.emoji}</div>
     <div class="pc-cta" onclick="event.stopPropagation();openPD(${p.id})">${EL_SVG} Visit →</div>

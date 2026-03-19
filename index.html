@@ -139,17 +139,8 @@ header{
 .b-sale{background:#fef3c7;color:#92400e}
 .b-disc{background:var(--teal);color:#fff}
 
-/* store pill */
-.pc-store{
-  position:absolute;top:.8rem;right:.8rem;z-index:4;
-  background:rgba(255,255,255,.95);border:1px solid var(--line);
-  border-radius:99px;padding:.24rem .72rem;
-  font-size:.5rem;font-weight:700;color:var(--dark);
-  display:flex;align-items:center;gap:.3rem;
-  box-shadow:var(--sh-xs);backdrop-filter:blur(6px);
-  transition:all .22s;letter-spacing:.03em;
-}
-.pc:hover .pc-store{background:var(--teal);color:#fff;border-color:var(--teal)}
+/* store pill — hidden on card, shown only in compare panel */
+.pc-store{display:none!important}
 
 
 
@@ -206,67 +197,120 @@ header{
 .pc-ad-btn{background:var(--teal);color:#fff;border:none;border-radius:var(--r-sm);padding:.42rem .95rem;font-size:.62rem;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;white-space:nowrap;transition:background .2s}
 .pc-ad-btn:hover{background:var(--teal-d)}
 
-/* ══ PRODUCT DETAIL PANEL ══ */
+/* ══ PRICE COMPARISON PANEL ══ */
 #pd-overlay{
-  position:fixed;inset:0;background:rgba(26,26,26,.45);z-index:500;
-  opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(2px);
+  position:fixed;inset:0;background:rgba(26,26,26,.5);z-index:500;
+  opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(3px);
 }
 #pd-overlay.show{opacity:1;pointer-events:all}
 #pd-panel{
-  position:fixed;right:-520px;top:0;bottom:0;z-index:600;
-  width:min(480px,96vw);background:var(--white);
-  box-shadow:-8px 0 48px rgba(0,0,0,.14);
-  overflow-y:auto;transition:right .4s cubic-bezier(.16,1,.3,1);
+  position:fixed;right:-600px;top:0;bottom:0;z-index:600;
+  width:min(560px,98vw);background:var(--ivory);
+  box-shadow:-8px 0 56px rgba(0,0,0,.18);
+  overflow-y:auto;transition:right .42s cubic-bezier(.16,1,.3,1);
   display:flex;flex-direction:column;
 }
 #pd-panel.show{right:0}
-.pd-top{
-  background:linear-gradient(145deg,var(--ivory),var(--teal-m));
-  padding:2.5rem 2rem 2rem;position:relative;
-  display:flex;align-items:center;justify-content:center;
-  min-height:220px;
+
+/* header strip */
+.pd-header{
+  background:linear-gradient(135deg,var(--teal),#0fa8ae);
+  padding:1.6rem 1.8rem;position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;gap:1.2rem;
 }
+.pd-header-emoji{font-size:3.8rem;filter:drop-shadow(0 4px 16px rgba(0,0,0,.2));flex-shrink:0}
+.pd-header-info{flex:1;min-width:0}
+.pd-header-cat{font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:.25rem}
+.pd-header-name{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:700;color:#fff;line-height:1.2}
+.pd-header-rev{font-size:.68rem;color:rgba(255,255,255,.75);margin-top:.3rem;display:flex;align-items:center;gap:.4rem}
 .pd-close{
-  position:absolute;top:1rem;right:1rem;
-  background:rgba(255,255,255,.85);border:none;border-radius:50%;
-  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:1rem;color:var(--mid);
-  transition:all .2s;box-shadow:var(--sh-xs);
+  background:rgba(255,255,255,.2);border:none;border-radius:50%;
+  width:34px;height:34px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:#fff;font-size:.95rem;transition:background .2s;
 }
-.pd-close:hover{background:var(--teal);color:#fff}
-.pd-emoji-big{font-size:7rem;filter:drop-shadow(0 8px 24px rgba(0,0,0,.1));animation:pdFloat 4s ease-in-out infinite}
-@keyframes pdFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.pd-badges-row{position:absolute;top:1rem;left:1rem;display:flex;gap:.35rem}
-.pd-body{padding:1.8rem 2rem;flex:1}
-.pd-store-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem}
-.pd-store-pill{
-  display:inline-flex;align-items:center;gap:.35rem;
+.pd-close:hover{background:rgba(255,255,255,.35)}
+
+/* best deal banner */
+.pd-best-banner{
+  background:linear-gradient(90deg,#0d7377,#0fa8ae);
+  padding:.6rem 1.8rem;
+  display:flex;align-items:center;gap:.6rem;
+  font-size:.68rem;font-weight:700;color:#fff;letter-spacing:.04em;
+}
+.pd-best-banner span{background:rgba(255,255,255,.22);padding:.18rem .6rem;border-radius:99px;font-size:.58rem}
+
+/* comparison list */
+.pd-compare-list{padding:1.2rem 1.5rem;display:flex;flex-direction:column;gap:.85rem}
+
+/* each platform row */
+.pd-row{
+  background:var(--white);border-radius:var(--r-lg);
+  border:1.5px solid var(--line);
+  overflow:hidden;
+  transition:transform .22s,box-shadow .22s,border-color .2s;
+  cursor:pointer;
+}
+.pd-row:hover{transform:translateY(-2px);box-shadow:var(--sh-md);border-color:var(--teal)}
+.pd-row.best{border-color:var(--teal);border-width:2px;box-shadow:0 0 0 3px rgba(13,115,119,.1)}
+
+/* best deal crown label */
+.pd-row-crown{
+  background:var(--teal);color:#fff;
+  padding:.32rem 1.2rem;
+  font-size:.58rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  display:flex;align-items:center;gap:.4rem;
+}
+
+/* row content */
+.pd-row-body{
+  padding:.95rem 1.2rem;
+  display:flex;align-items:center;gap:1rem;
+}
+/* platform logo area */
+.pd-platform-logo{
+  width:52px;height:52px;border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.6rem;flex-shrink:0;
+  background:var(--ivory-2);border:1px solid var(--line);
+}
+.pd-platform-name{
+  font-size:.65rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  margin-top:.25rem;
+}
+/* price block */
+.pd-row-center{flex:1;min-width:0}
+.pd-row-price{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:700;color:var(--dark);line-height:1}
+.pd-row-old{font-size:.75rem;color:var(--soft);text-decoration:line-through;margin-top:.1rem}
+.pd-row-offer{
+  display:inline-flex;align-items:center;gap:.3rem;
   background:var(--teal-m);border:1px solid rgba(13,115,119,.2);
-  border-radius:99px;padding:.28rem .8rem;
-  font-size:.58rem;font-weight:700;color:var(--teal);letter-spacing:.06em;
+  border-radius:99px;padding:.18rem .6rem;
+  font-size:.58rem;font-weight:700;color:var(--teal);margin-top:.35rem;
 }
-.pd-cat{font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--soft)}
-.pd-name{font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:700;color:var(--dark);line-height:1.2;margin:.5rem 0 .7rem}
-.pd-stars-row{display:flex;align-items:center;gap:.6rem;margin-bottom:1.2rem}
-.pd-rev{font-size:.72rem;color:var(--soft)}
-.pd-price-row{display:flex;align-items:baseline;gap:.6rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--line)}
-.pd-price{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--dark)}
-.pd-old-price{font-size:.95rem;color:var(--soft);text-decoration:line-through}
-.pd-save{background:var(--teal-m);color:var(--teal);font-size:.6rem;font-weight:800;padding:.2rem .6rem;border-radius:99px}
-.pd-desc{font-size:.82rem;color:var(--mid);line-height:1.8;margin-bottom:1.5rem}
-.pd-meta{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.8rem}
-.pd-meta-item{background:var(--ivory-2);border-radius:var(--r-sm);padding:.75rem .9rem}
-.pd-meta-lbl{font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin-bottom:.2rem}
-.pd-meta-val{font-size:.8rem;font-weight:600;color:var(--dark)}
-.pd-btn{
-  display:flex;align-items:center;justify-content:center;gap:.55rem;
-  width:100%;background:var(--teal);color:#fff;border:none;
-  border-radius:var(--r-md);padding:1rem;
-  font-family:'Manrope',sans-serif;font-size:.88rem;font-weight:700;
-  cursor:pointer;transition:all .25s;
+.pd-row-offer.hot{background:#fef3c7;border-color:#fde68a;color:#92400e}
+.pd-row-delivery{font-size:.62rem;color:var(--mute);margin-top:.25rem}
+/* CTA button */
+.pd-row-btn{
+  background:var(--teal);color:#fff;border:none;
+  border-radius:var(--r-sm);padding:.55rem 1.1rem;
+  font-family:'Manrope',sans-serif;font-size:.68rem;font-weight:700;
+  cursor:pointer;white-space:nowrap;transition:all .2s;
+  display:flex;align-items:center;gap:.35rem;flex-shrink:0;
 }
-.pd-btn:hover{background:var(--teal-d);transform:translateY(-1px);box-shadow:var(--sh-teal)}
-.pd-btn svg{width:14px;height:14px;flex-shrink:0}
+.pd-row-btn:hover{background:var(--teal-d);transform:translateY(-1px)}
+.pd-row-btn.best-btn{background:var(--teal);box-shadow:var(--sh-teal)}
+.pd-row-btn svg{width:11px;height:11px}
+
+/* desc section */
+.pd-desc-section{
+  margin:0 1.5rem 1.5rem;
+  background:var(--white);border-radius:var(--r-md);
+  border:1px solid var(--line);padding:1.1rem 1.3rem;
+}
+.pd-desc-lbl{font-size:.55rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);margin-bottom:.5rem}
+.pd-desc-txt{font-size:.8rem;color:var(--mid);line-height:1.8}
+
 
 /* ══ POPUP AD SYSTEM ══ */
 /* overlay */
@@ -492,35 +536,28 @@ footer{background:var(--white);border-top:1px solid var(--line);padding:1.8rem 5
   </div>
 </footer>
 
-<!-- PRODUCT DETAIL PANEL -->
+<!-- PRICE COMPARISON PANEL -->
 <div id="pd-overlay" onclick="closePD()"></div>
 <div id="pd-panel">
-  <div class="pd-top">
-    <div class="pd-badges-row" id="pd-badges"></div>
+  <div class="pd-header">
+    <div class="pd-header-emoji" id="pd-emoji">👗</div>
+    <div class="pd-header-info">
+      <div class="pd-header-cat" id="pd-cat">Fashion</div>
+      <div class="pd-header-name" id="pd-name">Product Name</div>
+      <div class="pd-header-rev">
+        <span id="pd-stars-h"></span>
+        <span id="pd-rev-h">0 reviews</span>
+      </div>
+    </div>
     <button class="pd-close" onclick="closePD()">✕</button>
-    <div class="pd-emoji-big" id="pd-emoji">👗</div>
   </div>
-  <div class="pd-body">
-    <div class="pd-store-row">
-      <div class="pd-store-pill" id="pd-store">🛒 Amazon</div>
-      <span class="pd-cat" id="pd-cat">Fashion</span>
-    </div>
-    <div class="pd-name" id="pd-name">Product Name</div>
-    <div class="pd-stars-row">
-      <div class="stars" id="pd-stars"></div>
-      <span class="pd-rev" id="pd-rev">0 reviews</span>
-    </div>
-    <div class="pd-price-row">
-      <span class="pd-price" id="pd-price">₹0</span>
-      <span class="pd-old-price" id="pd-old"></span>
-      <span class="pd-save" id="pd-save" style="display:none"></span>
-    </div>
-    <div class="pd-desc" id="pd-desc"></div>
-    <div class="pd-meta" id="pd-meta"></div>
-    <button class="pd-btn" id="pd-btn" onclick="pdGoStore()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      Visit Store →
-    </button>
+  <div class="pd-best-banner" id="pd-best-banner">
+    🏆 Best Deal <span id="pd-best-store">Amazon</span> — Lowest Price Available
+  </div>
+  <div class="pd-compare-list" id="pd-compare-list"></div>
+  <div class="pd-desc-section" id="pd-desc-section">
+    <div class="pd-desc-lbl">About this product</div>
+    <div class="pd-desc-txt" id="pd-desc-txt"></div>
   </div>
 </div>
 
@@ -542,8 +579,8 @@ footer{background:var(--white);border-top:1px solid var(--line);padding:1.8rem 5
       <span class="pop-save" id="pp-save">Save 19%</span>
     </div>
     <button class="pop-btn" id="pp-cta" onclick="popGoStore()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      Grab This Deal →
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1-2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      <span id="pp-cta-text">Grab This Deal →</span>
     </button>
     <div class="pop-skip" onclick="nextPopAd()">Show next deal ›</div>
     <div class="pop-dots" id="pp-dots"></div>
@@ -632,9 +669,9 @@ function productCard(p,d){
       ${p.badge==='Sale'?'<span class="bdg b-sale">Sale</span>':''}
       ${disc?`<span class="bdg b-disc">−${disc}%</span>`:''}
     </div>
-    <div class="pc-store">${STORE_ICONS[p.store]||'🔗'} ${p.store}</div>
+    <div class="pc-store" style="display:none">${STORE_ICONS[p.store]||'🔗'} ${p.store}</div>
     <div class="pc-emoji">${p.emoji}</div>
-    <div class="pc-cta" onclick="event.stopPropagation();goStore(${p.id})">${EL_SVG} Visit ${p.store} →</div>
+    <div class="pc-cta" onclick="event.stopPropagation();openPD(${p.id})">${EL_SVG} Visit →</div>
   </div>
   <div class="pc-div"></div>
   <div class="pc-info">
@@ -652,7 +689,6 @@ const FB_SVG=`<svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-1
 const IG_SVG=`<svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>`;
 function adCard(ad,d){
   return`<div class="pc-ad" onclick="window.open('${ad.url}','_blank','noopener')" style="animation-delay:${d}ms">
-  <div class="pc-ad-top ${ad.platform}">${ad.platform==='fb'?FB_SVG:IG_SVG}${ad.platform==='fb'?'Facebook':'Instagram'}<span class="sp">Sponsored</span></div>
   <div class="pc-ad-img">${ad.emoji}</div>
   <div class="pc-ad-body">
     <div class="pc-ad-lbl">${ad.lbl}</div>
@@ -704,16 +740,26 @@ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t
 let ppIdx=0,ppTimer,ppW=100;
 function setPopDeal(idx){
   const d=POP_DEALS[idx];
-  document.getElementById('pp-emoji').textContent=d.emoji;
-  document.getElementById('pp-title').textContent=d.title;
-  document.getElementById('pp-desc').textContent=d.desc;
-  document.getElementById('pp-price').textContent=d.price;
-  document.getElementById('pp-old').textContent=d.old||'';
-  document.getElementById('pp-save').textContent=d.save||'';
-  document.getElementById('pp-cta').childNodes[1].textContent=' '+d.cta;
-  /* dots */
-  const dots=document.getElementById('pp-dots');
-  dots.innerHTML=POP_DEALS.map((_,i)=>`<div class="pop-dot ${i===idx?'on':''}" onclick="goToPopDeal(${i})"></div>`).join('');
+  const box=document.getElementById('pop-box');
+  /* fade out content, swap, fade in */
+  const body=box.querySelector('.pop-body');
+  const hdr=box.querySelector('.pop-header');
+  [body,hdr].forEach(el=>{if(el)el.style.opacity='0'});
+  setTimeout(()=>{
+    document.getElementById('pp-emoji').textContent=d.emoji;
+    document.getElementById('pp-title').textContent=d.title;
+    document.getElementById('pp-desc').textContent=d.desc;
+    document.getElementById('pp-price').textContent=d.price;
+    document.getElementById('pp-old').textContent=d.old||'';
+    document.getElementById('pp-save').textContent=d.save||'';
+    const ctaTxt=document.getElementById('pp-cta-text');
+    if(ctaTxt) ctaTxt.textContent=d.cta;
+    /* rebuild dots */
+    document.getElementById('pp-dots').innerHTML=POP_DEALS.map((_,i)=>
+      `<div class="pop-dot ${i===idx?'on':''}" onclick="goToPopDeal(${i})"></div>`
+    ).join('');
+    [body,hdr].forEach(el=>{if(el)el.style.transition='opacity .3s';el&&(el.style.opacity='1')});
+  },200);
 }
 function startPopTimer(){
   clearInterval(ppTimer);ppW=100;
@@ -782,54 +828,153 @@ function startCornerTimer(){
 }
 function cornerPopGo(){const d=CP_DEALS[cpIdx];window.open(d.url,'_blank','noopener')}
 
-/* ══ PRODUCT DETAIL PANEL ══ */
+/* ══ PRICE COMPARISON DATA ══
+   Each product has listings on multiple platforms — sorted by price ascending
+   (cheapest = best deal shown first with crown)
+═══════════════════════════════════ */
+const PLATFORM_META = {
+  Amazon:  { icon:'🛒', color:'#FF9900', bg:'#fff8ee', name:'Amazon',  nameColor:'#c45500' },
+  Flipkart:{ icon:'🛍️', color:'#2874F0', bg:'#eff4ff', name:'Flipkart',nameColor:'#2874F0' },
+  Myntra:  { icon:'👗', color:'#FF3F6C', bg:'#fff0f4', name:'Myntra',  nameColor:'#FF3F6C' },
+  Meesho:  { icon:'🛒', color:'#9B5CF5', bg:'#f5efff', name:'Meesho',  nameColor:'#7c3aed' },
+  Tanishq: { icon:'💍', color:'#B8860B', bg:'#fdf8ee', name:'Tanishq', nameColor:'#92400e' },
+  Ajio:    { icon:'🧥', color:'#1d1d1d', bg:'#f5f5f5', name:'AJIO',    nameColor:'#1d1d1d' },
+};
+
+const PRODUCT_LISTINGS = {
+  1: [ // Silk Lumière Blouse
+    {store:'Amazon',  price:3499, old:4999, offer:'30% off + Free delivery', delivery:'Free delivery by tomorrow', url:'https://www.amazon.in/s?k=silk+blouse+women'},
+    {store:'Myntra',  price:3799, old:4999, offer:'24% off + Extra 10% off', delivery:'Free delivery in 3-5 days',  url:'https://www.myntra.com/blouses?rawQuery=silk+blouse'},
+    {store:'Meesho',  price:2999, old:4500, offer:'33% off + Lowest Price',  delivery:'Delivery in 5-7 days',       url:'https://www.meesho.com/silk-blouse/p/silk-blouse'},
+    {store:'Flipkart',price:3649, old:4999, offer:'27% off + Bank offers',   delivery:'Free delivery by tomorrow',  url:'https://www.flipkart.com/search?q=silk+blouse+women'},
+  ],
+  2: [ // Meridian Brass Watch
+    {store:'Flipkart',price:12999,old:15999,offer:'19% off + Exchange offer',delivery:'Free delivery tomorrow',      url:'https://www.flipkart.com/search?q=brass+analog+watch+men'},
+    {store:'Amazon',  price:13499,old:15999,offer:'16% off + No cost EMI',   delivery:'Free delivery by tomorrow',  url:'https://www.amazon.in/s?k=brass+analog+watch+men'},
+    {store:'Meesho',  price:11999,old:15999,offer:'25% off + Lowest Price',  delivery:'Delivery in 5-7 days',       url:'https://www.meesho.com/search?q=brass+watch'},
+    {store:'Ajio',    price:13999,old:16999,offer:'18% off + Style credits', delivery:'Free delivery in 2-3 days',  url:'https://www.ajio.com/search/?text=brass+watch+men'},
+  ],
+  3: [ // Vetiver Candle Set
+    {store:'Meesho',  price:1499, old:2000, offer:'25% off + Best Price',    delivery:'Delivery in 5-7 days',       url:'https://www.meesho.com/search?q=soy+candle+set'},
+    {store:'Amazon',  price:1899, old:null, offer:'Free shipping above ₹499',delivery:'Free delivery by tomorrow',  url:'https://www.amazon.in/s?k=soy+wax+candle+set+luxury'},
+    {store:'Flipkart',price:1999, old:2500, offer:'20% off + Free delivery', delivery:'Free delivery in 2-3 days',  url:'https://www.flipkart.com/search?q=scented+candle+set'},
+  ],
+  4: [ // Cognac Drop Earrings
+    {store:'Myntra',  price:5499, old:6999, offer:'21% off + Extra 5% off',  delivery:'Free delivery in 3-5 days',  url:'https://www.myntra.com/earrings?rawQuery=gold+drop+earrings'},
+    {store:'Meesho',  price:4999, old:6999, offer:'29% off + Lowest Price',  delivery:'Delivery in 5-7 days',       url:'https://www.meesho.com/search?q=gold+drop+earrings'},
+    {store:'Amazon',  price:5799, old:6999, offer:'17% off + Free delivery', delivery:'Free delivery by tomorrow',  url:'https://www.amazon.in/s?k=cognac+drop+earrings+gold'},
+    {store:'Tanishq', price:5899, old:6999, offer:'Authenticity guaranteed', delivery:'In-store pickup available',  url:'https://www.tanishq.co.in/earrings'},
+  ],
+  5: [ // Merino Heritage Overshirt
+    {store:'Myntra',  price:3999, old:null, offer:'10% bank offer',          delivery:'Free delivery in 3-5 days',  url:'https://www.myntra.com/shirts?rawQuery=merino+wool+shirt+men'},
+    {store:'Amazon',  price:4199, old:null, offer:'Free delivery',           delivery:'Free delivery by tomorrow',  url:'https://www.amazon.in/s?k=merino+wool+overshirt'},
+    {store:'Ajio',    price:3799, old:4800, offer:'21% off + Style points',  delivery:'Free delivery in 2-3 days',  url:'https://www.ajio.com/search/?text=merino+overshirt'},
+    {store:'Meesho',  price:3299, old:null, offer:'Lowest Price + Free ship',delivery:'Delivery in 5-7 days',       url:'https://www.meesho.com/search?q=merino+shirt'},
+  ],
+  6: [ // Brass Noise-Cancellers
+    {store:'Amazon',  price:7999, old:9999, offer:'20% off + No Cost EMI',   delivery:'Free delivery by tomorrow',  url:'https://www.amazon.in/s?k=noise+cancelling+headphones+wireless'},
+    {store:'Flipkart',price:8499, old:9999, offer:'15% off + Exchange ₹500', delivery:'Free delivery tomorrow',     url:'https://www.flipkart.com/search?q=brass+noise+cancelling+headphones'},
+    {store:'Meesho',  price:6999, old:9999, offer:'30% off + Best Price',    delivery:'Delivery in 5-7 days',       url:'https://www.meesho.com/search?q=noise+cancelling+headphones'},
+  ],
+  7: [ // Artisan Tea Set
+    {store:'Meesho',  price:2799, old:3999, offer:'30% off + Best Price',    delivery:'Delivery in 5-7 days',       url:'https://www.meesho.com/search?q=ceramic+tea+set'},
+    {store:'Amazon',  price:3299, old:3999, offer:'18% off + Free delivery', delivery:'Free delivery by tomorrow',  url:'https://www.amazon.in/s?k=ceramic+tea+set+handmade'},
+    {store:'Flipkart',price:3499, old:3999, offer:'13% off + Free delivery', delivery:'Free delivery in 2-3 days',  url:'https://www.flipkart.com/search?q=ceramic+tea+set'},
+  ],
+  8: [ // Hammered Gold Bangles
+    {store:'Meesho',  price:3999, old:5999, offer:'33% off + Lowest Price',  delivery:'Delivery in 5-7 days',       url:'https://www.meesho.com/search?q=gold+bangles'},
+    {store:'Myntra',  price:4499, old:5999, offer:'25% off + Extra 5% off',  delivery:'Free delivery in 3-5 days',  url:'https://www.myntra.com/bangles?rawQuery=gold+bangles'},
+    {store:'Tanishq', price:4899, old:5999, offer:'18% off + BIS Hallmark',  delivery:'In-store or home delivery',  url:'https://www.tanishq.co.in/gold-bangles'},
+    {store:'Amazon',  price:4699, old:5999, offer:'22% off + Free delivery', delivery:'Free delivery by tomorrow',  url:'https://www.amazon.in/s?k=gold+bangles+women'},
+  ],
+  9: [ // Tobacco Leather Wallet
+    {store:'Meesho',  price:1799, old:null, offer:'Best Price + Free ship',  delivery:'Delivery in 5-7 days',       url:'https://www.meesho.com/search?q=leather+wallet+men'},
+    {store:'Amazon',  price:2299, old:null, offer:'Free delivery',           delivery:'Free delivery by tomorrow',  url:'https://www.amazon.in/s?k=genuine+leather+wallet+men'},
+    {store:'Flipkart',price:2099, old:null, offer:'Free delivery + warranty',delivery:'Free delivery tomorrow',     url:'https://www.flipkart.com/search?q=leather+wallet+men'},
+    {store:'Myntra',  price:2499, old:null, offer:'Extra 10% bank offer',    delivery:'Free delivery in 3-5 days',  url:'https://www.myntra.com/wallets?rawQuery=leather+wallet+men'},
+  ],
+  10: [ // Moka Pot
+    {store:'Amazon',  price:5999, old:null, offer:'Free delivery',           delivery:'Free delivery by tomorrow',  url:'https://www.amazon.in/s?k=bialetti+moka+pot'},
+    {store:'Flipkart',price:6499, old:null, offer:'Free delivery + warranty',delivery:'Free delivery in 2-3 days',  url:'https://www.flipkart.com/search?q=moka+pot'},
+    {store:'Meesho',  price:4999, old:null, offer:'Lowest Price + Free ship',delivery:'Delivery in 5-7 days',       url:'https://www.meesho.com/search?q=moka+pot'},
+  ],
+  11: [ // Linen Throw
+    {store:'Meesho',  price:1999, old:null, offer:'Best Price + Free ship',  delivery:'Delivery in 5-7 days',       url:'https://www.meesho.com/search?q=linen+throw+blanket'},
+    {store:'Flipkart',price:2799, old:null, offer:'Free delivery',           delivery:'Free delivery in 2-3 days',  url:'https://www.flipkart.com/search?q=linen+throw+blanket'},
+    {store:'Amazon',  price:2599, old:null, offer:'Free delivery',           delivery:'Free delivery by tomorrow',  url:'https://www.amazon.in/s?k=linen+throw+blanket'},
+  ],
+  12: [ // Velvet Jewellery Armoire
+    {store:'Meesho',  price:1299, old:2299, offer:'43% off + Best Price',    delivery:'Delivery in 5-7 days',       url:'https://www.meesho.com/search?q=jewellery+box+velvet'},
+    {store:'Amazon',  price:1699, old:2299, offer:'26% off + Free delivery', delivery:'Free delivery by tomorrow',  url:'https://www.amazon.in/s?k=jewellery+box+velvet+organizer'},
+    {store:'Flipkart',price:1849, old:2299, offer:'20% off + Free delivery', delivery:'Free delivery in 2-3 days',  url:'https://www.flipkart.com/search?q=jewellery+organizer+velvet'},
+  ],
+};
+
+const EXT_SVG=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
+
+/* ══ PRICE COMPARISON PANEL ══ */
 let pdCurrentId=null;
+
 function openPD(id){
   const p=PRODUCTS.find(x=>x.id===id);
   if(!p) return;
   pdCurrentId=id;
-  const disc=p.old?Math.round((1-p.price/p.old)*100):null;
-  // badges
-  document.getElementById('pd-badges').innerHTML=
-    (p.badge==='New'?'<span class="bdg b-new">New</span>':'')+
-    (p.badge==='Sale'?'<span class="bdg b-sale">Sale</span>':'')+
-    (disc?`<span class="bdg b-disc">−${disc}%</span>`:'');
+
+  // Update header
   document.getElementById('pd-emoji').textContent=p.emoji;
-  document.getElementById('pd-store').textContent=(STORE_ICONS[p.store]||'🔗')+' '+p.store;
   document.getElementById('pd-cat').textContent=p.cat;
   document.getElementById('pd-name').textContent=p.name;
-  document.getElementById('pd-stars').innerHTML=stars(p.stars);
-  document.getElementById('pd-rev').textContent=p.reviews+' verified reviews';
-  document.getElementById('pd-price').textContent='₹'+p.price.toLocaleString();
-  const oldEl=document.getElementById('pd-old');
-  oldEl.textContent=p.old?'₹'+p.old.toLocaleString():'';
-  const saveEl=document.getElementById('pd-save');
-  if(disc){saveEl.textContent='Save '+disc+'%';saveEl.style.display='inline-flex';}
-  else saveEl.style.display='none';
-  document.getElementById('pd-desc').textContent=p.desc||'Premium quality product curated by Praison Ventures. Click below to view and purchase on '+p.store+'.';
-  // meta grid
-  const colors=(p.colors||[]).join(', ')||'—';
-  const sizes=(p.sizes||[]).join(', ')||'—';
-  document.getElementById('pd-meta').innerHTML=`
-    <div class="pd-meta-item"><div class="pd-meta-lbl">Category</div><div class="pd-meta-val">${p.cat}</div></div>
-    <div class="pd-meta-item"><div class="pd-meta-lbl">Store</div><div class="pd-meta-val">${p.store}</div></div>
-    <div class="pd-meta-item"><div class="pd-meta-lbl">Rating</div><div class="pd-meta-val">${p.stars}.0 ★</div></div>
-    <div class="pd-meta-item"><div class="pd-meta-lbl">Reviews</div><div class="pd-meta-val">${p.reviews}</div></div>`;
-  document.getElementById('pd-btn').innerHTML=`${EL_SVG} Shop on ${p.store} →`;
-  // show
+  document.getElementById('pd-stars-h').innerHTML=stars(p.stars);
+  document.getElementById('pd-rev-h').textContent=p.reviews+' reviews';
+  document.getElementById('pd-desc-txt').textContent=p.desc||'Premium quality product curated by Praison Ventures.';
+
+  // Get listings for this product, sorted cheapest first
+  let listings=(PRODUCT_LISTINGS[id]||[{store:p.store,price:p.price,old:p.old,offer:'Best Price',delivery:'See store for delivery',url:p.url}]);
+  listings=[...listings].sort((a,b)=>a.price-b.price);
+
+  // Best deal = first (cheapest)
+  const best=listings[0];
+  document.getElementById('pd-best-store').textContent=best.store;
+
+  // Build comparison rows
+  const html=listings.map((l,i)=>{
+    const m=PLATFORM_META[l.store]||{icon:'🔗',color:'#333',bg:'#f5f5f5',name:l.store,nameColor:'#333'};
+    const disc=l.old?Math.round((1-l.price/l.old)*100):null;
+    const isBest=i===0;
+    return`<div class="pd-row${isBest?' best':''}" onclick="window.open('${l.url}','_blank','noopener')">
+      ${isBest?`<div class="pd-row-crown">🏆 Best Deal — Lowest Price</div>`:''}
+      <div class="pd-row-body">
+        <div>
+          <div class="pd-platform-logo" style="background:${m.bg}">${m.icon}</div>
+          <div class="pd-platform-name" style="color:${m.nameColor}">${m.name}</div>
+        </div>
+        <div class="pd-row-center">
+          <div class="pd-row-price">₹${l.price.toLocaleString()}</div>
+          ${l.old?`<div class="pd-row-old">₹${l.old.toLocaleString()}${disc?` · ${disc}% off`:''}</div>`:''}
+          <div class="pd-row-offer${isBest?' hot':''}">${isBest?'🔥 ':''}${l.offer}</div>
+          <div class="pd-row-delivery">🚚 ${l.delivery}</div>
+        </div>
+        <button class="pd-row-btn${isBest?' best-btn':''}" onclick="event.stopPropagation();window.open('${l.url}','_blank','noopener')">
+          ${EXT_SVG} Buy Now
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('pd-compare-list').innerHTML=html;
+
+  // Show panel
   document.getElementById('pd-overlay').classList.add('show');
   document.getElementById('pd-panel').classList.add('show');
   document.body.style.overflow='hidden';
 }
+
 function closePD(){
   document.getElementById('pd-overlay').classList.remove('show');
   document.getElementById('pd-panel').classList.remove('show');
   document.body.style.overflow='';
 }
-function pdGoStore(){
-  const p=PRODUCTS.find(x=>x.id===pdCurrentId);
-  if(p?.url) window.open(p.url,'_blank','noopener,noreferrer');
-}
+
 
 /* ══ BOOT ══ */
 renderGrid();
